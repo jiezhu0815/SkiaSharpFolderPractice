@@ -19,7 +19,7 @@
                 </CollectionView.ItemsLayout>
                 <CollectionView.ItemTemplate>
                     <DataTemplate>
-                        <controls:FolderControl HeightRequest="115" VerticalOptions="Center" HorizontalOptions="Center"></controls:FolderControl>
+                        <controls:FolderControl HeightRequest="130" VerticalOptions="Center" HorizontalOptions="Center"></controls:FolderControl>
                     </DataTemplate>
                 </CollectionView.ItemTemplate>
             </CollectionView>
