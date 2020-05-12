@@ -1,0 +1,28 @@
+﻿<?xml version="1.0" encoding="utf-8" ?>
+<ContentPage xmlns="http://xamarin.com/schemas/2014/forms"
+             xmlns:x="http://schemas.microsoft.com/winfx/2009/xaml"
+             xmlns:d="http://xamarin.com/schemas/2014/forms/design"
+             xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006" xmlns:pancake="clr-namespace:Xamarin.Forms.PancakeView;assembly=Xamarin.Forms.PancakeView" xmlns:controls="clr-namespace:SkiaSharpFolderPractice"
+             mc:Ignorable="d"
+             x:Class="SkiaSharpFolderPractice.MainPage">
+
+    <Grid>
+        <Grid.RowDefinitions>
+            <RowDefinition Height="95"/>
+            <RowDefinition Height="*"/>
+        </Grid.RowDefinitions>
+        <Label Margin="0,0,0,-20" BackgroundColor="CornflowerBlue" HorizontalOptions="Fill" VerticalOptions="Fill"/>
+        <pancake:PancakeView Grid.Row="1" CornerRadius="20,20,0,0" BackgroundColor="#F3F3F3" >
+            <CollectionView BackgroundColor="White" ItemsSource="{Binding FoldersCollection}">
+                <CollectionView.ItemsLayout>
+                    <GridItemsLayout Orientation="Vertical" Span="2" />
+                </CollectionView.ItemsLayout>
+                <CollectionView.ItemTemplate>
+                    <DataTemplate>
+                        <controls:FolderControl HeightRequest="115" VerticalOptions="Center" HorizontalOptions="Center"></controls:FolderControl>
+                    </DataTemplate>
+                </CollectionView.ItemTemplate>
+            </CollectionView>
+        </pancake:PancakeView>
+    </Grid>   
+</ContentPage>
