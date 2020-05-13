@@ -18,11 +18,33 @@ namespace SkiaSharpFolderPractice
         public MainPage()
         {
             InitializeComponent();
-            FoldersCollection = new ObservableCollection<Folder>()
-            {
-            new Folder(),new Folder(),new Folder(),new Folder(),new Folder(),new Folder(),new Folder(),new Folder(),new Folder(),new Folder(),new Folder(),new Folder(),new Folder(),new Folder(),new Folder(),new Folder()
-            };
+            FoldersCollection = new ObservableCollection<Folder>() {
+                new Folder(){ DisplayColor="Blue"},
+                new Folder(){ DisplayColor="Green"},
+                new Folder(){ DisplayColor="LightBlue"},
+                new Folder(){ DisplayColor="LightGreen"},
+                new Folder(){ DisplayColor="NavyBlue"},
+                new Folder(){ DisplayColor="Orange"},
+                new Folder(){ DisplayColor="Pink"},
+                new Folder(){ DisplayColor="Purple"},
+                new Folder(){ DisplayColor="Red"},
+                new Folder(){ DisplayColor="Yellow"},
+                new Folder(){ DisplayColor="Black"},
+                new Folder(){ DisplayColor="Gray"},
+                new Folder(){ DisplayColor="Blue"},
+                new Folder(){ DisplayColor="Green"},
+                new Folder(){ DisplayColor="LightBlue"},
+                new Folder(){ DisplayColor="LightGreen"},
+                new Folder(){ DisplayColor="NavyBlue"},
+                new Folder(){ DisplayColor="Orange"},
+                new Folder(){ DisplayColor="Pink"},
+                new Folder(){ DisplayColor="Purple"},
+                new Folder(){ DisplayColor="Red"},
+                new Folder(){ DisplayColor="Yellow"},
+                new Folder(){ DisplayColor="Black"},
+                new Folder(){ DisplayColor="Gray"}
 
+            };
             BindingContext = this;
         }
 
