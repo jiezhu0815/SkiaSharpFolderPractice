@@ -271,19 +271,13 @@ namespace SkiaSharpFolderPractice
 
         private void FolderCanvasTapGestureRecognizer_Tapped(object sender, EventArgs e)
         {
-            if(FolderOpenCloseState== FolderState.Close)
-            {
-                FolderOpenCloseState = FolderState.Open;
-            }
-            else
-            {
-                FolderOpenCloseState = FolderState.Close;
-            }
+
             var parentAnimation = new Animation();
             parentAnimation.Add(0.00, 1, CreateFrontDegreeAnimation());
             //We need to add some other animations such jumpout a file and turn it into a canvas
 
-            parentAnimation.Commit(this, "FolderAnimation", 16, 20000);
+            parentAnimation.Commit(this, "FolderAnimation", 16, 2000);
+           
         }
 
         private Animation CreateFrontDegreeAnimation()
@@ -301,7 +295,22 @@ namespace SkiaSharpFolderPractice
                 },
                 folderAnimStart,
                 folderAnimEnd,
-                Easing.SinInOut
+                Easing.SinInOut,
+                () =>
+                {
+
+                    if (FolderOpenCloseState == FolderState.Close)
+                    {
+                        FolderOpenCloseState = FolderState.Open;
+                        FrontPathDegree = 42f;
+                    }
+                    else
+                    {
+                        FolderOpenCloseState = FolderState.Close;
+                        FrontPathDegree = 0f;
+                    }
+                }
+
                 );
             return folderAnim;
 
