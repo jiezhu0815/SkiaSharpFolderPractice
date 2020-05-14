@@ -14,6 +14,11 @@ namespace SkiaSharpFolderPractice
     public partial class FolderControl : ContentView
     {
 
+        public FolderState FolderOpenCloseState { get; set; } = FolderState.Close;
+
+        public float FrontPathDegree { get; set; } = 0f;
+
+
         public string Color1 { get; set; } = "#FFD445";
         public string Color2 { get; set; } = "#FF8F00";
         public string Color3 { get; set; } = "#FFDE4F";
@@ -237,9 +242,7 @@ namespace SkiaSharpFolderPractice
             {
                 frontPath.Transform(SKMatrix.MakeScale(density, density));
                 frontPath.GetTightBounds(out var frontPathTightBounds);
-                var translateXFrontPath = info.Width * 0.5f - frontPathTightBounds.MidX;
-                var translateYFrontPath = info.Height - frontPathTightBounds.Bottom - 20f;
-                canvas.Translate(translateXFrontPath, translateYFrontPath);
+
                 fillPaint.Shader = SKShader.CreateLinearGradient(
                 new SKPoint(info.Width * 0.5f, 0),
                 new SKPoint(info.Width * 0.5f, info.Height),
@@ -247,9 +250,60 @@ namespace SkiaSharpFolderPractice
                 new float[] { 0, 0.595f, 0.957f, 1 },
                 SKShaderTileMode.Clamp
                 );
+                
+                SKMatrix matrix = SKMatrix.MakeTranslation(-frontPathTightBounds.Right, -frontPathTightBounds.Bottom);
+                SKMatrix44 matrix44 = SKMatrix44.CreateIdentity();
+                matrix44.PostConcat(SKMatrix44.CreateRotationDegrees(1, 0, 0, -FrontPathDegree));
+                matrix44.PostConcat(SKMatrix44.CreateRotationDegrees(0, 1, 0, -0.5f* FrontPathDegree));
+                matrix44.PostConcat(SKMatrix44.CreateRotationDegrees(0, 0, 1, 0));
+                SKMatrix.PostConcat(ref matrix, matrix44.Matrix);
+                SKMatrix.PostConcat(ref matrix,SKMatrix.MakeTranslation(frontPathTightBounds.Right, frontPathTightBounds.Bottom));
+                canvas.SetMatrix(matrix);
+
+                var translateXFrontPath = info.Width * 0.5f - frontPathTightBounds.MidX;
+                var translateYFrontPath = info.Height - frontPathTightBounds.Bottom - 20f;
+                canvas.Translate(translateXFrontPath, translateYFrontPath);
                 canvas.DrawPath(frontPath, fillPaint);
             }
             canvas.Restore();
+
+        }
+
+        private void FolderCanvasTapGestureRecognizer_Tapped(object sender, EventArgs e)
+        {
+            if(FolderOpenCloseState== FolderState.Close)
+            {
+                FolderOpenCloseState = FolderState.Open;
+            }
+            else
+            {
+                FolderOpenCloseState = FolderState.Close;
+            }
+            var parentAnimation = new Animation();
+            parentAnimation.Add(0.00, 1, CreateFrontDegreeAnimation());
+            //We need to add some other animations such jumpout a file and turn it into a canvas
+
+            parentAnimation.Commit(this, "FolderAnimation", 16, 20000);
+        }
+
+        private Animation CreateFrontDegreeAnimation()
+        {
+
+            var folderAnimStart = FolderOpenCloseState == FolderState.Close ? 0f: 42f;
+            var folderAnimEnd = FolderOpenCloseState == FolderState.Open ? 42f: 0f;
+
+            var folderAnim = new Animation(
+                v =>
+                {
+
+                    FrontPathDegree = (float)v;
+                    FolderCanvas.InvalidateSurface();
+                },
+                folderAnimStart,
+                folderAnimEnd,
+                Easing.SinInOut
+                );
+            return folderAnim;
 
         }
     }

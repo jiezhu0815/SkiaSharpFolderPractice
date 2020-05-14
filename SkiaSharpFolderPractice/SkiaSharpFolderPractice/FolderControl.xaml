@@ -9,7 +9,9 @@
   <ContentView.Content>
         <Grid BackgroundColor="White">
             <skia:SKCanvasView x:Name="FolderCanvas" PaintSurface="FolderCanvas_PaintSurface">
-
+                <skia:SKCanvasView.GestureRecognizers>
+                    <TapGestureRecognizer Tapped="FolderCanvasTapGestureRecognizer_Tapped"/>
+                </skia:SKCanvasView.GestureRecognizers>
             </skia:SKCanvasView>
         </Grid>
   </ContentView.Content>
