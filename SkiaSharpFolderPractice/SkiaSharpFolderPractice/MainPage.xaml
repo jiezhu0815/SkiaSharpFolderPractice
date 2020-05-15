@@ -19,7 +19,9 @@
                 </CollectionView.ItemsLayout>
                 <CollectionView.ItemTemplate>
                     <DataTemplate>
-                        <controls:FolderControl FolderColor="{Binding DisplayColor}" HeightRequest="120" VerticalOptions="Center" HorizontalOptions="Center"></controls:FolderControl>
+                        <controls:FolderControl FolderColor="{Binding DisplayColor}" 
+                                                FolderOpenCloseState="{Binding FolderOpenCloseState}"
+                                                HeightRequest="120" VerticalOptions="Center" HorizontalOptions="Center"></controls:FolderControl>
                     </DataTemplate>
                 </CollectionView.ItemTemplate>
             </CollectionView>

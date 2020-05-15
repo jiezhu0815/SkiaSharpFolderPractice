@@ -14,8 +14,9 @@ namespace SkiaSharpFolderPractice
     public partial class FolderControl : ContentView
     {
 
-        public FolderState FolderOpenCloseState { get; set; } = FolderState.Close;
+        //public FolderState FolderOpenCloseState { get; set; } = FolderState.Close;
 
+        private bool isAnimate = false;
         public float FrontPathDegree { get; set; } = 0f;
 
 
@@ -154,6 +155,31 @@ namespace SkiaSharpFolderPractice
             control.FolderCanvas.InvalidateSurface();
         }
 
+        public static readonly BindableProperty FolderOpenCloseStateProperty = BindableProperty.Create(
+                                                     propertyName: "FolderOpenCloseState",
+                                                     returnType: typeof(string),
+                                                     declaringType: typeof(FolderControl),
+                                                     defaultValue: "",
+                                                     defaultBindingMode: BindingMode.TwoWay,
+                                                     propertyChanged: FolderOpenCloseStatePropertyChanged);
+
+        public string FolderOpenCloseState
+        {
+            get { 
+                return base.GetValue(FolderOpenCloseStateProperty).ToString(); 
+            }
+            set { base.SetValue(FolderOpenCloseStateProperty, value); }
+        }
+
+        private static void FolderOpenCloseStatePropertyChanged(BindableObject bindable, object oldValue, object newValue)
+        {
+            var control = (FolderControl)bindable;
+            var folderState = newValue.ToString();
+            control.FolderOpenCloseState = folderState;
+            control.FolderCanvas.InvalidateSurface();
+        }
+
+
         SKPaint fillPaint = new SKPaint
         {
             Style = SKPaintStyle.Fill
@@ -253,8 +279,27 @@ namespace SkiaSharpFolderPractice
                 
                 SKMatrix matrix = SKMatrix.MakeTranslation(-frontPathTightBounds.Right, -frontPathTightBounds.Bottom);
                 SKMatrix44 matrix44 = SKMatrix44.CreateIdentity();
-                matrix44.PostConcat(SKMatrix44.CreateRotationDegrees(1, 0, 0, -FrontPathDegree));
-                matrix44.PostConcat(SKMatrix44.CreateRotationDegrees(0, 1, 0, -0.5f* FrontPathDegree));
+                if(isAnimate)
+                {
+                    matrix44.PostConcat(SKMatrix44.CreateRotationDegrees(1, 0, 0, -FrontPathDegree));
+                    matrix44.PostConcat(SKMatrix44.CreateRotationDegrees(0, 1, 0, -0.5f * FrontPathDegree));
+                }
+                else
+                {
+                    var rotateDegree = 0f;
+                    if(FolderOpenCloseState=="Close")
+                    {
+                        rotateDegree = 0f;
+                    }
+                    else
+                    {
+                        rotateDegree = 42f;
+                    }
+                    matrix44.PostConcat(SKMatrix44.CreateRotationDegrees(1, 0, 0, -rotateDegree));
+                    matrix44.PostConcat(SKMatrix44.CreateRotationDegrees(0, 1, 0, -0.5f * rotateDegree));
+
+                }
+
                 matrix44.PostConcat(SKMatrix44.CreateRotationDegrees(0, 0, 1, 0));
                 SKMatrix.PostConcat(ref matrix, matrix44.Matrix);
                 SKMatrix.PostConcat(ref matrix,SKMatrix.MakeTranslation(frontPathTightBounds.Right, frontPathTightBounds.Bottom));
@@ -282,9 +327,9 @@ namespace SkiaSharpFolderPractice
 
         private Animation CreateFrontDegreeAnimation()
         {
-
-            var folderAnimStart = FolderOpenCloseState == FolderState.Close ? 0f: 42f;
-            var folderAnimEnd = FolderOpenCloseState == FolderState.Open ? 42f: 0f;
+            isAnimate = true;
+            var folderAnimStart = FolderOpenCloseState == "Close" ? 0f: 42f;
+            var folderAnimEnd = FolderOpenCloseState == "Open" ? 42f: 0f;
 
             var folderAnim = new Animation(
                 v =>
@@ -299,16 +344,17 @@ namespace SkiaSharpFolderPractice
                 () =>
                 {
 
-                    if (FolderOpenCloseState == FolderState.Close)
+                    if (FolderOpenCloseState == "Close")
                     {
-                        FolderOpenCloseState = FolderState.Open;
+                        FolderOpenCloseState = "Open";
                         FrontPathDegree = 42f;
                     }
                     else
                     {
-                        FolderOpenCloseState = FolderState.Close;
+                        FolderOpenCloseState = "Close";
                         FrontPathDegree = 0f;
                     }
+                    isAnimate = false;
                 }
 
                 );

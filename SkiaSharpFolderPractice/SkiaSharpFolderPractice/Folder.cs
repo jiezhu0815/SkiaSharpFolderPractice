@@ -16,5 +16,16 @@ namespace SkiaSharpFolderPractice
                 SetProperty(ref _displayColor, value);
             }
         }
+
+        private string _folderOpenCloseState;
+
+        public string FolderOpenCloseState
+        {
+            get { return _folderOpenCloseState; }
+            set
+            {
+                SetProperty(ref _folderOpenCloseState, value);
+            }
+        }
     }
 }
