@@ -19,35 +19,41 @@ namespace SkiaSharpFolderPractice
         {
             InitializeComponent();
             FoldersCollection = new ObservableCollection<Folder>() {
-                new Folder(){ DisplayColor="Blue",FolderOpenCloseState="Close"},
-                new Folder(){ DisplayColor="Green",FolderOpenCloseState="Close"},
-                new Folder(){ DisplayColor="LightBlue",FolderOpenCloseState="Close"},
-                new Folder(){ DisplayColor="LightGreen",FolderOpenCloseState="Close"},
-                new Folder(){ DisplayColor="NavyBlue",FolderOpenCloseState="Close"},
-                new Folder(){ DisplayColor="Orange",FolderOpenCloseState="Close"},
-                new Folder(){ DisplayColor="Pink",FolderOpenCloseState="Close"},
-                new Folder(){ DisplayColor="Purple",FolderOpenCloseState="Close"},
-                new Folder(){ DisplayColor="Red",FolderOpenCloseState="Close"},
-                new Folder(){ DisplayColor="Yellow",FolderOpenCloseState="Close"},
-                new Folder(){ DisplayColor="Black",FolderOpenCloseState="Close"},
-                new Folder(){ DisplayColor="Gray",FolderOpenCloseState="Close"},
-                new Folder(){ DisplayColor="Blue",FolderOpenCloseState="Close"},
-                new Folder(){ DisplayColor="Green",FolderOpenCloseState="Close"},
-                new Folder(){ DisplayColor="LightBlue",FolderOpenCloseState="Close"},
-                new Folder(){ DisplayColor="LightGreen",FolderOpenCloseState="Close"},
-                new Folder(){ DisplayColor="NavyBlue",FolderOpenCloseState="Close"},
-                new Folder(){ DisplayColor="Orange",FolderOpenCloseState="Close"},
-                new Folder(){ DisplayColor="Pink",FolderOpenCloseState="Close"},
-                new Folder(){ DisplayColor="Purple",FolderOpenCloseState="Close"},
-                new Folder(){ DisplayColor="Red",FolderOpenCloseState="Close"},
-                new Folder(){ DisplayColor="Yellow",FolderOpenCloseState="Close"},
-                new Folder(){ DisplayColor="Black",FolderOpenCloseState="Close"},
-                new Folder(){ DisplayColor="Gray",FolderOpenCloseState="Close"}
-
+                new Folder(){ DisplayColor="Blue",FolderOpenCloseState=FolderState.Close},
+                new Folder(){ DisplayColor="Green",FolderOpenCloseState=FolderState.Close},
+                new Folder(){ DisplayColor="LightBlue",FolderOpenCloseState=FolderState.Close},
+                new Folder(){ DisplayColor="LightGreen",FolderOpenCloseState=FolderState.Close},
+                new Folder(){ DisplayColor="NavyBlue",FolderOpenCloseState=FolderState.Close},
+                new Folder(){ DisplayColor="Orange",FolderOpenCloseState=FolderState.Close},
+                new Folder(){ DisplayColor="Pink",FolderOpenCloseState=FolderState.Close},
+                new Folder(){ DisplayColor="Purple",FolderOpenCloseState=FolderState.Close},
+                new Folder(){ DisplayColor="Red" ,FolderOpenCloseState=FolderState.Close},
+                new Folder(){ DisplayColor="Yellow",FolderOpenCloseState=FolderState.Close},
+                new Folder(){ DisplayColor="Black",FolderOpenCloseState=FolderState.Close},
+                new Folder(){ DisplayColor="Gray",FolderOpenCloseState=FolderState.Close},
+                new Folder(){ DisplayColor="Blue",FolderOpenCloseState=FolderState.Close},
+                new Folder(){ DisplayColor="Green",FolderOpenCloseState=FolderState.Close},
+                new Folder(){ DisplayColor="LightBlue",FolderOpenCloseState=FolderState.Close},
+                new Folder(){ DisplayColor="LightGreen",FolderOpenCloseState=FolderState.Close},
+                new Folder(){ DisplayColor="NavyBlue",FolderOpenCloseState=FolderState.Close},
+                new Folder(){ DisplayColor="Orange",FolderOpenCloseState=FolderState.Close},
+                new Folder(){ DisplayColor="Pink",FolderOpenCloseState=FolderState.Close},
+                new Folder(){ DisplayColor="Purple",FolderOpenCloseState=FolderState.Close},
+                new Folder(){ DisplayColor="Red",FolderOpenCloseState=FolderState.Close},
+                new Folder(){ DisplayColor="Yellow",FolderOpenCloseState=FolderState.Close},
+                new Folder(){ DisplayColor="Black",FolderOpenCloseState=FolderState.Close},
+                new Folder(){ DisplayColor="Gray",FolderOpenCloseState=FolderState.Close}
+                
             };
             BindingContext = this;
+            //FolderCollection.SelectionChanged += FolderCollection_SelectionChanged;
         }
 
-
+        //private void FolderCollection_SelectionChanged(object sender, SelectionChangedEventArgs e)
+        //{
+        //    Folder folder = (Folder)(e.CurrentSelection[0]);
+        //    folder.Control.AnimateFolderOpenClose();
+        //    //MessagingCenter.Send<OpenFolderMessage>(new OpenFolderMessage(), string.Empty);
+        //}
     }
 }

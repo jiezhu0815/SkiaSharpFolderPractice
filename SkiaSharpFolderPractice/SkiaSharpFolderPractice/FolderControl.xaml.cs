@@ -2,6 +2,7 @@
 using System;
 using System.Collections.Generic;
 using System.Linq;
+using System.Runtime.CompilerServices;
 using System.Text;
 using System.Threading.Tasks;
 
@@ -14,11 +15,7 @@ namespace SkiaSharpFolderPractice
     public partial class FolderControl : ContentView
     {
 
-        //public FolderState FolderOpenCloseState { get; set; } = FolderState.Close;
-
-        private bool isAnimate = false;
-        public float FrontPathDegree { get; set; } = 0f;
-
+        public Folder FolderViewModel { get; set; }
 
         public string Color1 { get; set; } = "#FFD445";
         public string Color2 { get; set; } = "#FF8F00";
@@ -157,16 +154,17 @@ namespace SkiaSharpFolderPractice
 
         public static readonly BindableProperty FolderOpenCloseStateProperty = BindableProperty.Create(
                                                      propertyName: "FolderOpenCloseState",
-                                                     returnType: typeof(string),
+                                                     returnType: typeof(FolderState),
                                                      declaringType: typeof(FolderControl),
-                                                     defaultValue: "",
+                                                     defaultValue: FolderState.Close,
                                                      defaultBindingMode: BindingMode.TwoWay,
                                                      propertyChanged: FolderOpenCloseStatePropertyChanged);
 
-        public string FolderOpenCloseState
+        public FolderState FolderOpenCloseState
         {
-            get { 
-                return base.GetValue(FolderOpenCloseStateProperty).ToString(); 
+            get
+            {
+                return (FolderState)Enum.Parse(typeof(FolderState), base.GetValue(FolderOpenCloseStateProperty).ToString());
             }
             set { base.SetValue(FolderOpenCloseStateProperty, value); }
         }
@@ -175,8 +173,30 @@ namespace SkiaSharpFolderPractice
         {
             var control = (FolderControl)bindable;
             var folderState = newValue.ToString();
-            control.FolderOpenCloseState = folderState;
-            control.FolderCanvas.InvalidateSurface();
+            control.FolderOpenCloseState = (FolderState)Enum.Parse(typeof(FolderState), folderState); 
+            if(control.FolderViewModel==null||(control.FolderViewModel!=null && control.FolderViewModel.IsAnimated == false))
+            {
+                control.FolderCanvas.InvalidateSurface();
+            }
+
+        }
+
+
+        public static readonly BindableProperty IsAnimatedProperty = BindableProperty.Create(
+                                                    propertyName: "IsAnimated",
+                                                    returnType: typeof(bool),
+                                                    declaringType: typeof(FolderControl),
+                                                    defaultValue: false,
+                                                    defaultBindingMode: BindingMode.TwoWay,
+                                                    propertyChanged: null);
+
+        public bool IsAnimated
+        {
+            get
+            {
+                return bool.Parse(base.GetValue(IsAnimatedProperty).ToString());
+            }
+            set { base.SetValue(IsAnimatedProperty, value); }
         }
 
 
@@ -188,6 +208,34 @@ namespace SkiaSharpFolderPractice
         public FolderControl()
         {
             InitializeComponent();
+
+            //MessagingCenter.Subscribe<OpenFolderMessage>(new OpenFolderMessage(), string.Empty, (sender) => {
+            //    var parentAnimation = new Animation();
+            //    parentAnimation.Add(0.00, 1, CreateFrontDegreeAnimation());
+            //    //We need to add some other animations such jumpout a file and turn it into a canvas
+
+            //    parentAnimation.Commit(this, "FolderAnimation", 16, 2000);
+            //});
+        }
+
+        protected override void OnBindingContextChanged()
+        {
+            base.OnBindingContextChanged();
+            if (this.BindingContext != null)
+            {                
+                FolderViewModel = (Folder)this.BindingContext;
+                FolderViewModel.Control = this;
+            }
+        }
+
+
+        public void AnimateFolderOpenClose()
+        {
+            var parentAnimation = new Animation();
+            parentAnimation.Add(0.00, 1, CreateFrontDegreeAnimation());
+            //    //We need to add some other animations such jumpout a file and turn it into a canvas
+
+            parentAnimation.Commit(this, "FolderAnimation", 16, 2000);
         }
 
         private void FolderCanvas_PaintSurface(object sender, SkiaSharp.Views.Forms.SKPaintSurfaceEventArgs e)
@@ -279,15 +327,18 @@ namespace SkiaSharpFolderPractice
                 
                 SKMatrix matrix = SKMatrix.MakeTranslation(-frontPathTightBounds.Right, -frontPathTightBounds.Bottom);
                 SKMatrix44 matrix44 = SKMatrix44.CreateIdentity();
-                if(isAnimate)
+      
+
+                if(FolderViewModel!=null && FolderViewModel.IsAnimated)
                 {
-                    matrix44.PostConcat(SKMatrix44.CreateRotationDegrees(1, 0, 0, -FrontPathDegree));
-                    matrix44.PostConcat(SKMatrix44.CreateRotationDegrees(0, 1, 0, -0.5f * FrontPathDegree));
+                    matrix44.PostConcat(SKMatrix44.CreateRotationDegrees(1, 0, 0, -FolderViewModel.FrontPathDegree));
+                    matrix44.PostConcat(SKMatrix44.CreateRotationDegrees(0, 1, 0, -0.5f * FolderViewModel.FrontPathDegree));
+
                 }
                 else
                 {
                     var rotateDegree = 0f;
-                    if(FolderOpenCloseState=="Close")
+                    if (FolderOpenCloseState == FolderState.Close)
                     {
                         rotateDegree = 0f;
                     }
@@ -297,8 +348,7 @@ namespace SkiaSharpFolderPractice
                     }
                     matrix44.PostConcat(SKMatrix44.CreateRotationDegrees(1, 0, 0, -rotateDegree));
                     matrix44.PostConcat(SKMatrix44.CreateRotationDegrees(0, 1, 0, -0.5f * rotateDegree));
-
-                }
+                }               
 
                 matrix44.PostConcat(SKMatrix44.CreateRotationDegrees(0, 0, 1, 0));
                 SKMatrix.PostConcat(ref matrix, matrix44.Matrix);
@@ -316,26 +366,27 @@ namespace SkiaSharpFolderPractice
 
         private void FolderCanvasTapGestureRecognizer_Tapped(object sender, EventArgs e)
         {
+            if(FolderViewModel!=null)
+            {
+                var parentAnimation = new Animation();
+                parentAnimation.Add(0.00, 1, CreateFrontDegreeAnimation());
+                //    //We need to add some other animations such jumpout a file and turn it into a canvas
 
-            var parentAnimation = new Animation();
-            parentAnimation.Add(0.00, 1, CreateFrontDegreeAnimation());
-            //We need to add some other animations such jumpout a file and turn it into a canvas
-
-            parentAnimation.Commit(this, "FolderAnimation", 16, 2000);
-           
+                parentAnimation.Commit(this, "FolderAnimation", 16, 2000);
+            }
         }
 
         private Animation CreateFrontDegreeAnimation()
         {
-            isAnimate = true;
-            var folderAnimStart = FolderOpenCloseState == "Close" ? 0f: 42f;
-            var folderAnimEnd = FolderOpenCloseState == "Open" ? 42f: 0f;
+            FolderViewModel.IsAnimated = true;
+            var folderAnimStart =(FolderOpenCloseState ==FolderState.Close)?0f:42f;
+            var folderAnimEnd = (FolderOpenCloseState == FolderState.Close) ? 42f : 0f;
 
             var folderAnim = new Animation(
                 v =>
                 {
 
-                    FrontPathDegree = (float)v;
+                    FolderViewModel.FrontPathDegree = (float)v;
                     FolderCanvas.InvalidateSurface();
                 },
                 folderAnimStart,
@@ -343,20 +394,18 @@ namespace SkiaSharpFolderPractice
                 Easing.SinInOut,
                 () =>
                 {
-
-                    if (FolderOpenCloseState == "Close")
+                    if (FolderViewModel.FolderOpenCloseState == FolderState.Close)
                     {
-                        FolderOpenCloseState = "Open";
-                        FrontPathDegree = 42f;
+                        FolderViewModel.FolderOpenCloseState = FolderState.Open;
+                        //FrontPathDegree = 42f;
                     }
                     else
                     {
-                        FolderOpenCloseState = "Close";
-                        FrontPathDegree = 0f;
+                        FolderViewModel.FolderOpenCloseState = FolderState.Close;
+                        //FrontPathDegree = 0f;
                     }
-                    isAnimate = false;
+                    FolderViewModel.IsAnimated = false;
                 }
-
                 );
             return folderAnim;
 

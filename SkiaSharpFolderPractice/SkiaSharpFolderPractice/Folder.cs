@@ -17,9 +17,9 @@ namespace SkiaSharpFolderPractice
             }
         }
 
-        private string _folderOpenCloseState;
+        private FolderState _folderOpenCloseState;
 
-        public string FolderOpenCloseState
+        public FolderState FolderOpenCloseState
         {
             get { return _folderOpenCloseState; }
             set
@@ -27,5 +27,26 @@ namespace SkiaSharpFolderPractice
                 SetProperty(ref _folderOpenCloseState, value);
             }
         }
+
+        private bool _isAnimated;
+
+        public bool IsAnimated
+        {
+            get { return _isAnimated; }
+            set
+            {
+                SetProperty(ref _isAnimated, value);
+            }
+        }
+
+        public float FrontPathDegree { get; set; } = 0f;
+
+        public FolderControl Control { get; set; }
+    }
+
+    public enum FolderState
+    {
+        Close,
+        Open
     }
 }

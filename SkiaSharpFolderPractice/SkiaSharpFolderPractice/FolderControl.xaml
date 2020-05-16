@@ -6,7 +6,7 @@
              xmlns:skia="clr-namespace:SkiaSharp.Views.Forms;assembly=SkiaSharp.Views.Forms"
              mc:Ignorable="d"
              x:Class="SkiaSharpFolderPractice.FolderControl">
-  <ContentView.Content>
+    <ContentView.Content>
         <Grid BackgroundColor="White">
             <skia:SKCanvasView x:Name="FolderCanvas" PaintSurface="FolderCanvas_PaintSurface">
                 <skia:SKCanvasView.GestureRecognizers>
@@ -14,5 +14,5 @@
                 </skia:SKCanvasView.GestureRecognizers>
             </skia:SKCanvasView>
         </Grid>
-  </ContentView.Content>
+    </ContentView.Content>
 </ContentView>

@@ -13,14 +13,15 @@
         </Grid.RowDefinitions>
         <Label Margin="0,0,0,-20" BackgroundColor="CornflowerBlue" HorizontalOptions="Fill" VerticalOptions="Fill"/>
         <pancake:PancakeView Grid.Row="1" CornerRadius="20,20,0,0" BackgroundColor="#F3F3F3" >
-            <CollectionView BackgroundColor="White" ItemsSource="{Binding FoldersCollection}">
+            <CollectionView x:Name="FolderCollection" BackgroundColor="White" ItemsSource="{Binding FoldersCollection}" SelectionMode="Single">
                 <CollectionView.ItemsLayout>
                     <GridItemsLayout Orientation="Vertical" Span="2" />
                 </CollectionView.ItemsLayout>
                 <CollectionView.ItemTemplate>
                     <DataTemplate>
-                        <controls:FolderControl FolderColor="{Binding DisplayColor}" 
+                        <controls:FolderControl FolderColor="{Binding DisplayColor}"     
                                                 FolderOpenCloseState="{Binding FolderOpenCloseState}"
+                                                IsAnimated="{Binding IsAnimated}"
                                                 HeightRequest="120" VerticalOptions="Center" HorizontalOptions="Center"></controls:FolderControl>
                     </DataTemplate>
                 </CollectionView.ItemTemplate>
